@@ -49,6 +49,10 @@ namespace SharePointFileHelper.Services
                 var foldersInPath = destinationFolderPath.Split('/');
                 foreach (var folderName in foldersInPath)
                 {
+                    if (string.IsNullOrEmpty(folderName))
+                    {
+                        continue;
+                    }
                     folder = folder.EnsureFolder(folderName);
                     ctx.Load(folder);
                     ctx.ExecuteQueryRetry();
