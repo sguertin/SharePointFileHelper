@@ -101,7 +101,7 @@ namespace SharePointFileHelper.Services
             uploadedFile.Update();
             ctx.ExecuteQueryRetry();
         }
-
+        // TODO: Update with correct return type
         private object GetContentId(string siteName, string listName, string contentTypeName)
         {
             using var ctx = _authManager.GetACSAppOnlyContext(GetTargetUrl(siteName), _clientId, _clientSecret);
