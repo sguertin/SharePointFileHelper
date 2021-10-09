@@ -12,11 +12,13 @@ namespace SharePointFileHelper.Services
 {
     public class SharePointLoaderService : ISharePointLoaderService
     {
+
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly string _siteUrl;
         private readonly ILogger<SharePointLoaderService> _logger;
         private readonly AuthenticationManager _authManager;
+
         public SharePointLoaderService(IConfiguration configuration, ILogger<SharePointLoaderService> logger)
         {
             _clientId = configuration["SharePointClientId"];
@@ -25,6 +27,7 @@ namespace SharePointFileHelper.Services
             _logger = logger;
             _authManager = new AuthenticationManager();
         }
+
         public string UploadFileToSharePoint(string siteName, string listName, UploadFile file, string destinationFolderPath = "/")
         {        
             using var ctx = _authManager.GetACSAppOnlyContext(GetTargetUrl(siteName), _clientId, _clientSecret);
@@ -59,7 +62,7 @@ namespace SharePointFileHelper.Services
             ctx.Load(folderToUpload);
             ctx.Load(folderToUpload.ListItemAllFields);
             ctx.ExecuteQueryRetry();
-            
+
             folderToUpload.UploadFile(file.FileName, new MemoryStream(file.FileContent), true);
             folderToUpload.Update();
             ctx.ExecuteQueryRetry();
@@ -94,6 +97,7 @@ namespace SharePointFileHelper.Services
             uploadedFile.Update();
             ctx.ExecuteQueryRetry();
         }
+
         private object GetContentId(string siteName, string listName, string contentTypeName)
         {
             using var ctx = _authManager.GetACSAppOnlyContext(GetTargetUrl(siteName), _clientId, _clientSecret);
@@ -113,6 +117,7 @@ namespace SharePointFileHelper.Services
                 .Select(c => c.Id)
                 .FirstOrDefault();
         }
+
         private string GetTargetUrl(string siteName) => $"{_siteUrl}/{siteName}";
         
         
