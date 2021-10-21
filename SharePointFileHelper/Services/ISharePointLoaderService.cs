@@ -14,6 +14,6 @@ namespace SharePointFileHelper.Services
         /// <param name="file">The information about the file</param>
         /// <param name="destinationFolderPath">The folder path to upload to (Defaults to RootFolder)</param>
         /// <returns>The url to the newly uploaded file</returns>
-        string UploadFileToSharePoint(string siteName, string listName, UploadFile file, string destinationFolderPath = "/");
+        void UploadFileToSharePoint(string siteName, string listName, UploadFile file, string destinationFolderPath = "/");
     }
 }

@@ -14,7 +14,8 @@ namespace SharePointFileHelper.Models
             { 
                 FileContent = File.ReadAllBytes(FileSourcePath);
             }
-            return FileContent
+            return FileContent;
         }
+        public string FileName => Path.GetFileName(FileSourcePath);
     }
 }

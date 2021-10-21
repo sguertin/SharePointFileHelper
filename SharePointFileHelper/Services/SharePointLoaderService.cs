@@ -28,7 +28,7 @@ namespace SharePointFileHelper.Services
             _authManager = new AuthenticationManager();
         }
 
-        public string UploadFileToSharePoint(string siteName, string listName, UploadFile file, string destinationFolderPath = "/")
+        public void UploadFileToSharePoint(string siteName, string listName, UploadFile file, string destinationFolderPath = "/")
         {        
             using var ctx = _authManager.GetACSAppOnlyContext(GetTargetUrl(siteName), _clientId, _clientSecret);
             var web = ctx.Web;
@@ -61,7 +61,7 @@ namespace SharePointFileHelper.Services
             var folderToUpload = web.GetFolderByServerRelativeUrl(folder.ServerRelativeUrl);
             if (folderToUpload == null)
             {
-                throw new DirectoryNotFoundException($"Failed to create directory {targetYear} in {targetUrl}");
+                throw new DirectoryNotFoundException($"Failed to create directory '{folderToUpload.Name}'");
             }            
             ctx.Load(folderToUpload);
             ctx.Load(folderToUpload.ListItemAllFields);
@@ -81,7 +81,7 @@ namespace SharePointFileHelper.Services
             }
             if (file.ItemFieldData.Keys.Count == 0 && string.IsNullOrEmpty(file.ContentType))
             {
-                return serverRelativeUrl;
+                return;
             }
             ctx.Load(uploadedFile);
             ctx.Load(uploadedFile.ListItemAllFields);
@@ -89,7 +89,7 @@ namespace SharePointFileHelper.Services
             ctx.ExecuteQueryRetry();
             if (!string.IsNullOrEmpty(file.ContentType))
             {
-                var contentTypeId = GetContentId(file.ContentType)
+                var contentTypeId = GetContentId(siteName, listName, file.ContentType);
                 uploadedFile.ListItemAllFields["ContentTypeId"] = contentTypeId.ToString();
             }
             foreach (var key in file.ItemFieldData.Keys)
@@ -212,7 +212,6 @@ namespace SharePointFileHelper.Services
         //             _logger.LogWarning($"Could not find newly uploaded file: {file.FileName} at {serverRelativeUrl}");
         //         }
         //     }
-        }
-
     }
+
 }
