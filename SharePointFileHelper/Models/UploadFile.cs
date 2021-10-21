@@ -16,6 +16,6 @@ namespace SharePointFileHelper.Models
             }
             return FileContent;
         }
-        public string FileName => Path.GetFileName(FileSourcePath);
+        public override string Name => Path.GetFileName(FileSourcePath);
     }
 }

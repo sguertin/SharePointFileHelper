@@ -67,13 +67,13 @@ namespace SharePointFileHelper.Services
             ctx.Load(folderToUpload.ListItemAllFields);
             ctx.ExecuteQueryRetry();
 
-            folderToUpload.UploadFile(file.FileName, new MemoryStream(file.FileContent), true);
+            folderToUpload.UploadFile(file.Name, new MemoryStream(file.FileContent), true);
             folderToUpload.Update();
             ctx.ExecuteQueryRetry();
             
             folderToUpload.EnsureProperty(f => f.ServerRelativeUrl);
 
-            var serverRelativeUrl = folderToUpload.ServerRelativeUrl.TrimEnd('/') + '/' + file.FileName;
+            var serverRelativeUrl = folderToUpload.ServerRelativeUrl.TrimEnd('/') + '/' + file.Name;
             var uploadedFile = web.GetFileByServerRelativeUrl(serverRelativeUrl);
             if (!uploadedFile.Exists)
             {
